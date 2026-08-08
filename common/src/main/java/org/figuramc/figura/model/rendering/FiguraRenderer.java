@@ -12,6 +12,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
+import org.figuramc.figura.FiguraMod;
 import org.figuramc.figura.avatar.Avatar;
 import org.figuramc.figura.math.matrix.FiguraMat3;
 import org.figuramc.figura.math.matrix.FiguraMat4;
@@ -86,7 +87,10 @@ public abstract class FiguraRenderer {
 
         // src files
         for (String key : src.keySet()) {
-            byte[] bytes = src.getByteArray(key).get();
+            byte[] bytes = src.getByteArray(key).orElseGet(() -> {
+                FiguraMod.LOGGER.warn("Missing byte array data for texture key: " + key);
+                return new byte[0];
+            });
             if (bytes.length > 0) {
                 textures.put(key, new FiguraTexture(avatar, key, bytes));
             } else {
